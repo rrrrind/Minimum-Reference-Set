@@ -37,15 +37,24 @@ Minimum Reference Setのモジュール
 ### MRS_ID
 1. from mrs import MinimumReferenceSet
 1. mrs = MinimumReferenceSet()
-1. 評価値 = mrs.run(1つの特徴量空間, クラスラベル, 探索上限)
+1. selected_samples = mrs.run(fs, c_label, mrs_limit)
+    - selected_samples(int型): 入力された特徴集合(特徴量空間)の評価値
+    - fs(np.array型, [サンプル, 特徴量]): 評価したい特徴集合(特徴量空間)
+    - c_label(list or np.array型, [0 or 1]): クラスラベル
+    - mrs_limit(int型): 探索上限，指定しない場合は全探索，指定を推奨(100とか？)
 
 ### MRS_FSA
 1. from modules.mrs_fs import MRSFeatureSelection
 1. mrs_fs = MRSFeatureSelection()
-1. 最良とされた時の評価値, 最良とされた特徴集合 = mrs_fs.run(X, y, mode='specific', k=key)  
-   X: [データ数, 特徴量], y: クラスラベル(0 or 1のlist), k: 評価したい特徴集合の次元数  
-   - mode = 'random'の場合: k次元の特徴集合をランダムで作成し，それを初期集合とする    
-   - mode = 'specific'の場合: kにlist型で特徴集合を入力し，それを初期集合とする  
+1. size_of_mrs, feature_set = mrs_fs.run(features, labels, mode=None, k=None)  
+    - size_of_mrs(int型): 最良とされた特徴集合(特徴量空間)の評価値
+    - feature_set(list型): 最良とされた特徴集合(特徴量空間)
+    - features(np.array or pd.DataFrame, [サンプル, 特徴量]): 全サンプルと全特徴量
+    - labels(list or np.array型, [0 or 1]): クラスラベル 
+    - mode(string型, 'random' or 'specific') :  
+        - 'random'の場合: k次元の特徴集合をランダムで作成し，それを初期集合とする  
+        - 'specific'の場合: kにlist型で特徴集合を入力し，それを初期集合とする  
+          (既に初期集合が決まっている場合は'specific'の使用を，決まっていない場合は'random'の使用を推奨)  
 
 
 ## Paper
