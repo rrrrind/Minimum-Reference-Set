@@ -6,7 +6,7 @@ class MRSIdentifier(object):
     def run(self, fs, c_label, mrs_limit=None):
         ca, cb = self._split_plots_by_class(fs, c_label)
         if (mrs_limit == None) or (mrs_limit > len(fs)):
-            mrs_limit = len(fs)
+            mrs_limit = len(fs) # MRSの最大値は全プロット数
         plot_dist = self._measurement_by_euclid(ca, cb)
         selected_samples = self._calc_mrs(ca, cb, plot_dist, fs, c_label, mrs_limit)
         return selected_samples
@@ -30,10 +30,7 @@ class MRSIdentifier(object):
                 p_dist[i,j] = np.linalg.norm(ca_vec-cb_vec)
         return p_dist
     
-    def _sort_outputs_of_measurement(self, p_dist):
-        return np.sort(p_dist.flatten())
-    
-    def _select_sorted_pairs(self, p_dist, pair_num):
+    def _select_sorted_pairs(self, p_dist):
         p_dist_sort = np.sort(list(set(p_dist.flatten())))
         
         sorted_ca_idx = []
@@ -61,12 +58,10 @@ class MRSIdentifier(object):
         return neigh.score(fs, c_label)
     
     def _calc_mrs(self, ca, cb, p_dist, fs, c_label, mrs_limit):
-        pair_num = len(ca)*len(cb)
-        
         ca_idx_list = []
         cb_idx_list = []
-        p_dist_sort = self._sort_outputs_of_measurement(p_dist)
-        sorted_ca_idx, sorted_cb_idx = self._select_sorted_pairs(p_dist, pair_num)
+
+        sorted_ca_idx, sorted_cb_idx = self._select_sorted_pairs(p_dist)
         
         count = 0
         while True:
